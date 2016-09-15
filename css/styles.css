@@ -1,0 +1,105 @@
+body {
+    background: url(../img/bg.jpg) no-repeat;
+    -moz-background-size: 100%; /* Firefox 3.6+ */
+    -webkit-background-size: 100%; /* Safari 3.1+ и Chrome 4.0+ */
+    -o-background-size: 100%; /* Opera 9.6+ */
+    background-size: 100%; /* Современные браузеры */
+    overflow: hidden;
+	font-family: Helvetica, sans-serif;
+	font-size: 30px;
+}
+	
+#block_calendar {
+	margin-top: 100px;
+	text-align: center;
+	color: white;
+}
+table {
+	margin: 0 auto;
+}
+table#full_calendar th, table#full_calendar td {
+	text-align: center;
+	padding: 4px;
+}
+.dayNumber:hover {
+	background-color: #35DE55;
+	cursor: pointer;
+}
+.today {
+	background-color: #FFA59E;
+}
+.holiday {
+	color: #F51605;
+}
+i:hover {
+	cursor: pointer;
+	color: #35DE55;
+}
+/*menu*/
+.slide {
+	background: white;
+	position: absolute;
+	width: 700px;
+	top: 0;
+	bottom: 0;
+	right: -700px;
+	font-size: 20px;
+	border-radius: 4px;
+	transition: all 1s;
+	padding: 5px 5px;
+
+}
+.slide #closeMenu:hover {
+	cursor: pointer;
+	color: #263a52;
+}
+#Date {
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+.sld {
+	right: 0;	
+}
+ .sld-cont {
+	margin-left: -200px;
+	margin-right: 200px;
+
+	transition: all 1s;
+} 
+.backToCenter {
+	margin-right: 0px;
+	margin-left: 0px;
+	transition: 1s;
+}
+div#menu {
+	font-family: Verdana;
+	font-size: 15px;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+.activeCell {
+	background-color: #35DE55;
+}
+.row {
+	margin-bottom: 15px;
+}
+.timeWakeUpClass {
+	margin-left: 30px;
+	border: solid 1px;
+	border-radius: 15px;
+	padding: 7px;
+	padding-left: 22px;
+	font-family: Verdana;
+	font-size: 20px;
+}
+
+.timeEditClass {
+	margin-left: 30px;
+	border: solid 1px;
+	border-radius: 15px;
+	padding: 7px;
+	padding-left: 22px;
+	font-family: Verdana;
+	font-size: 20px;
+}
