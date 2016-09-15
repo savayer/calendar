@@ -93,13 +93,8 @@ div#menu {
 	font-family: Verdana;
 	font-size: 20px;
 }
-
-.timeEditClass {
-	margin-left: 30px;
-	border: solid 1px;
-	border-radius: 15px;
-	padding: 7px;
-	padding-left: 22px;
+.textHead {
+	font-size: 16px;
 	font-family: Verdana;
-	font-size: 20px;
+	font-weight: bold;
 }
