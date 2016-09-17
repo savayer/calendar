@@ -98,3 +98,20 @@ div#menu {
 	font-family: Verdana;
 	font-weight: bold;
 }
+
+a {
+	cursor: pointer;
+}
+
+.glyphicon-plus-sign {
+	color: #44E71D;
+}
+.glyphicon-minus-sign {
+	color: #F5383D;
+}
+.glyphicon-plus-sign, .glyphicon-minus-sign {
+	opacity: 0.2;
+}
+.glyphicon-plus-sign:hover, .glyphicon-minus-sign:hover {
+	opacity: 1;
+}

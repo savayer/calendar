@@ -13,18 +13,13 @@ bootstrap.min.css"> -->
 	<div class="modal fade" id="modalTime">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
-				<div class="modal-header textHead">Типа тут должно записываться время подьема</div>
+				<button type="button" class="close" data-dismiss="modal" title="exit">&times;</button>
+				<div class="modal-header textHead">Время подъёма</div>
 				<div class="modal-body">
 					<div class="row">
-						<form class="col-md-10">
-							<input class="form-control" v-model="timeWakeUp">
-						</form>
-						<div class="col-md-2">
-							<button type="button" class="close" data-dismiss="modal" title="exit">&times;</button>		
-						</div>
-						
+						<form class="col-md-12" onsubmit="return false;"><input id="MaskTime" class="form-control" onkeydown="if (event.keyCode == 13) ChangeTimeInTable();" v-model="timeWakeUp"></form>
 					</div>
-					<button class="btn btn-danger btn-block" type="button">Save</button>
+					<button class="btn btn-danger btn-block" data-dismiss="modal" onclick="ChangeTimeInTable();" type="button">Сохранить</button>
 				</div>
 			</div>
 		</div>
@@ -33,23 +28,33 @@ bootstrap.min.css"> -->
 	<div class="modal fade" id="modalSlogan">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
+				<button type="button" class="close" data-dismiss="modal" title="exit">&times;</button>
 				<div class="modal-header textHead">Слоган</div>
 				<div class="modal-body">
 					<div class="row">
-						<form class="col-md-10">
-							<input class="form-control" v-model="slogan">
-						</form>
-						<div class="col-md-2">
-							<button type="button" class="close" data-dismiss="modal" title="exit">&times;</button>		
-						</div>
-						
+						<form class="col-md-12" onsubmit="return false;"><input class="form-control" v-model="slogan"></form>
 					</div>
-					<button class="btn btn-danger btn-block" type="button">Save</button>
+					<button class="btn btn-danger btn-block" data-dismiss="modal" type="button" >Сохранить</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<div class="modal fade" id="AddTask">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<button type="button" class="close" data-dismiss="modal" title="exit">&times;</button>
+				<div class="modal-header textHead">Задача</div>
+				<div class="modal-body">
+					<div class="row">
+						<form class="col-md-12" onsubmit="return false;"><input onkeydown="if (event.keyCode == 13) FuncAddTaskForDay();" class="form-control" id="textTask" ></form>
+					</div>
+					<button class="btn btn-danger btn-block" data-dismiss="modal" type="button" onclick="FuncAddTaskForDay();">Сохранить</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+	<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
 	<div id="menu" class="slide">
 		<div class="row">
 			<span id="closeMenu" class="col-md-1"><i class="glyphicon glyphicon-remove-sign"></i></span>
@@ -67,28 +72,46 @@ bootstrap.min.css"> -->
 				<em v-text="slogan" data-toggle="modal" data-target="#modalSlogan"></em>
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10" >
+				<div>Задачи на день:</div>
+				<ol id="DayTasks"></ol>
+				<a data-toggle="modal" data-target="#AddTask">Добавить</a>
+			</div>
+		</div>
 		
  		<div class="table-responsive">
 	 		<table id="TaskList" class="table table-striped table-bordered table-condensed">
-	 			<tbody>
-	 			<!-- 	<tr>
-	 				<td rowspan="2">6</td>
-	 				если текущая дата меньше или равна выбранной дате в календаре, то редактировать разрешаем
-	 				<td contenteditable="true">пробуждение потягушки</td>
-	 				<tr><td></td></tr>
-	 			</tr> -->
+	 			<tbody v-for="(i,j) in 18"> <!-- на сон 6 часов-->
+				 	<tr>
+				 		<td id="HourNumberInTable{{i}}" rowspan="2" class="col-md-1"></td> <!--  {{ $index+6 }}-->
+				 		<td contenteditable="true" class="col-md-10" id="task{{i+j}}"></td>
+				 		<td class="col-md-1">
+				 			<span class="glyphicon glyphicon-plus-sign" onclick="setRating(1,'task{{ i+j }}')"></span>
+				 			<span class="glyphicon glyphicon-minus-sign" onclick="setRating(0,'task{{ i+j }}')"></span>
+				 		</td>
+				 		<tr>
+				 			<td contenteditable="true" id="task{{i+j+1}}"></td>
+				 			<td>
+				 				<span class="glyphicon glyphicon-plus-sign" onclick="setRating(1,'task{{ i+j+1 }}')"></span>
+				 				<span class="glyphicon glyphicon-minus-sign" onclick="setRating(0,'task{{ i+j+1 }}')"></span>
+				 			</td>
+				 		</tr>
+				 	</tr>
 	 			</tbody>
 	 		</table>
 	 	</div>
 
-	 	 	<div class="dayResult">
-				<h2>Итоги дня:</h2>
-				<p>Блаблабла</p>
-				<h3>Статистика:</h3>
-				<p>Бла бла бла</p>
-			</div>
+ 	 	<div class="dayResult">
+			<h2>Итоги дня:</h2>
+			<p>Блаблабла</p>
+			<h3>Статистика:</h3>
+			<p>Бла бла бла</p>
+		</div>
  	</div>
- 	
+ 	<!-- //////////////////////////////////////////////////////////////////////////////////// -->
 	<div id="block_calendar">
 	    <table id="full_calendar">
 	    	<thead>
@@ -108,9 +131,7 @@ bootstrap.min.css"> -->
 		    		<td>Вс</td>
 		    	</tr>
 	    	</thead>
-	    	<tbody id="calendar">
-	    		
-	    	</tbody>
+	    	<tbody id="calendar"></tbody>
 	    </table>
  	</div>
 
@@ -118,45 +139,57 @@ bootstrap.min.css"> -->
 	<script src="js/jquery.min.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
 	<script src="js/common.js"></script>
+	<script src="js/jquery.maskedinput.min.js"></script>
 	 <script>
+	 	$(function() {
+        	$('#MaskTime').mask('99:99');
+        });
         var hour = new Date().getHours(),
-        	minute = new Date().getMinutes(),
-        	vm = new Vue({
+        	minute = new Date().getMinutes();
+        if (hour < 10) hour = '0'+hour;
+        if (minute < 10) minute = '0'+minute;
+        var	vm = new Vue({
                 el:'#body',
-                ready: function() {
-                	this.setDefault();
-                },
                 data: {
+                	hour: hour,
                 	timeWakeUp: hour+':'+minute,
-                    OneTask: [],
-                    slogan: "На пути к совершенству",
-                    timeEdit: "",
-                    taskEdit: ""
-
-                },
+                    slogan: "На пути к совершенству"
+                }, 
                 methods: {
-                    setDefault: function() {
-                        this.OneTask = "Подъём. Зарядка";
-                     },
-                     editItem: function(attr) {
-                        if (attr == "timeEdit") this.timeEdit = "edit";
-                        if (attr == "taskEdit") this.taskEdit = "edit";
-                     },
-                     cancelEdit: function(attr) {
-                        if (attr == "timeEdit") this.timeEdit = "";
-                        if (attr == "taskEdit") this.taskEdit = "";
-                     },
-                     saveEdit: function(attr) {
-                     	//........
-                     	if (attr == "timeEdit") this.timeEdit = "";
-                        if (attr == "taskEdit") this.taskEdit = "";
-                     }
+                	startFromSetHourInTable: function() {
+                		this.hour = this.timeWakeUp.substring(0,2);
+                	} 
                 }
-            })
-           	for (var i=0; i<17; i++) { //на сон уделяется 7 часов
-				document.querySelector('#TaskList').innerHTML += '<tr><td rowspan="2" class="col-md-1">'+(i+7)+'</td><td contenteditable="true"></td><tr><td contenteditable="true"></td></tr></tr>';
-           	}
-           	
+            });
+        //vm.startFromSetHourInTable();
+        function FuncAddTaskForDay() {
+        	document.querySelector('#DayTasks').innerHTML += '<li>'+document.querySelector("#textTask").value+'</li>';
+        	document.querySelector('#textTask').value = '';
+        }
+
+        function setRating(index, SomeTask) {
+        	if (index == 1)
+        		document.querySelector('#'+SomeTask).style.cssText = 'background: #B5FF9F'; //green
+        	if (index == 0)
+        		document.querySelector('#'+SomeTask).style.cssText = 'background: #FF9F9F'; //red
+        }
+        ChangeTimeInTable();
+        function ChangeTimeInTable() {
+        	var h = vm.timeWakeUp.substring(0,2),
+        		m = vm.timeWakeUp.substring(3),
+        		end = 18;
+        	if (m*1 >= 45) h = h*1+1;
+
+        	for (i=0,j=0; i<end; i++, j++) {
+	        	if (i > 24-h*1) {
+            		end = end - i;
+            		i = 0;
+            		h = 0;
+            	}
+	        	document.querySelector('#HourNumberInTable'+j).innerHTML = i+h*1;
+	        }
+        }
+        
     </script>
 </body>
 </html>

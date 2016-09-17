@@ -88,11 +88,3 @@ nextMonth.onclick = function () {
 	dayOfWeekOfFirstDayMonth = new Date(yearGlob, monthGlob, 1).getDay();
 	showMonth(yearGlob, monthGlob);
 }
-
-function editTask() {
-	//получить выбранную дату и вставить в условие 
-	if (monthGlob >= date.getMonth() && yearGlob >= date.getFullYear()) {
-		//вставить записанное дело в инпут для редактирования
-
-	}
-} 
