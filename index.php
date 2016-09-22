@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="template/bootstrap/css/bootstrap.css">
 <!-- 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/
 bootstrap.min.css"> -->
-	<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="template/css/styles.css">	
 	<title>Document</title>
 </head>
 <body id="body">
@@ -55,40 +56,50 @@ bootstrap.min.css"> -->
 		</div>
 	</div>	
 	<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+	<?php 
+		require_once('DB.php'); 
+		$obj = new DB;
+		$obj->doQuery('SELECT * FROM SelectedDay, Rating, TasksList, TasksForDay, DayResult WHERE (selectedday.id_day = taskslist.id_day) AND () ');
+			
+	?>
 	<div id="menu" class="slide">
 		<div class="row">
-			<span id="closeMenu" class="col-md-1"><i class="glyphicon glyphicon-remove-sign"></i></span>
-	 		<div class="col-md-2"></div>
-	 		<span id="Date" class="col-md-7"></span>
+			<span id="closeMenu" class="col-md-1 col-xs-1"><i class="glyphicon glyphicon-remove-sign"></i></span>
+	 		<div class="col-md-2 col-xs-2"></div>
+	 		<span id="Date" class="col-md-7 col-xs-7"></span>
 		</div>
-		
+
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-3 col-xs-3 col-md-offset-1">
 				<div class="timeWakeUpClass" data-toggle="modal" data-target="#modalTime" v-text="timeWakeUp"></div>
 			</div>
 			
-			<div class="col-md-1"></div>
-			<div class="col-md-8">
+			<div class="col-md-1 col-xs-1"></div>
+			<div class="col-md-8 col-xs-8">
 				<em v-text="slogan" data-toggle="modal" data-target="#modalSlogan"></em>
 			</div>
 		</div>
 
 		<div class="row">
-			<div class="col-md-1"></div>
-			<div class="col-md-10" >
-				<div>Задачи на день:</div>
+			<div class="col-md-1 col-xs-1"></div>
+			<div class="col-md-10 col-xs-10">
+				<div>
+					<span data-toggle="modal" data-target="#AddTask"><i class="glyphicon glyphicon-plus"></i></span>
+					Задачи на день:
+				</div>
 				<ol id="DayTasks"></ol>
-				<a data-toggle="modal" data-target="#AddTask">Добавить</a>
 			</div>
 		</div>
-		
+		<form class="col-md-offset-10 col-xs-offset-9">
+			<input type="button" value="Сохранить" id="saveToDB" class="btn btn-danger">
+		</form><br>		
  		<div class="table-responsive">
 	 		<table id="TaskList" class="table table-striped table-bordered table-condensed">
 	 			<tbody v-for="(i,j) in 18"> <!-- на сон 6 часов-->
 				 	<tr>
-				 		<td id="HourNumberInTable{{i}}" rowspan="2" class="col-md-1"></td> <!--  {{ $index+6 }}-->
-				 		<td contenteditable="true" class="col-md-10" id="task{{i+j}}"></td>
-				 		<td class="col-md-1">
+				 		<td id="HourNumberInTable{{i}}" rowspan="2" class="col-md-1 col-xs-1"></td> <!--  {{ $index+6 }}-->
+				 		<td contenteditable="true" class="col-md-10 col-xs-10" id="task{{i+j}}"></td>
+				 		<td class="col-md-1 col-xs-1">
 				 			<span class="glyphicon glyphicon-plus-sign" onclick="setRating(1,'task{{ i+j }}')"></span>
 				 			<span class="glyphicon glyphicon-minus-sign" onclick="setRating(0,'task{{ i+j }}')"></span>
 				 		</td>
@@ -115,12 +126,12 @@ bootstrap.min.css"> -->
 	<div id="block_calendar">
 	    <table id="full_calendar">
 	    	<thead>
-	    		<th><i id="prevMonth" class="fa fa-angle-left"></i></th>
+	    		<th><i id="prevMonth" class="glyphicon glyphicon-chevron-left"></i></th>
 				<th colspan="5">
 					<span id="month"></span>
 					<span id="year"></span>
 				</th>
-	    		<th><i id="nextMonth" class="fa fa-angle-right"></i></th>
+	    		<th><i id="nextMonth" class="glyphicon glyphicon-chevron-right"></i></th>
 		    	<tr>
 		    		<td>Пн</td>
 		    		<td>Вт</td>
@@ -134,62 +145,43 @@ bootstrap.min.css"> -->
 	    	<tbody id="calendar"></tbody>
 	    </table>
  	</div>
+ 	<script src="template/js/vue.min.js"></script>
+	<script src="template/js/jquery.min.js"></script>
+	<script src="template/bootstrap/js/bootstrap.min.js"></script>
+	<script src="template/js/jquery.maskedinput.min.js"></script>
+	<script src="template/js/calendar.js"></script>
+	<script>
+		$('#saveToDB').on('click', function () {
+			var taskText = [],
+				tasksForDay = [],
+				DayTasksLi = document.querySelectorAll('#DayTasks li');
 
-	<script src="js/vue.min.js"></script>
-	<script src="js/jquery.min.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="js/common.js"></script>
-	<script src="js/jquery.maskedinput.min.js"></script>
-	 <script>
-	 	$(function() {
-        	$('#MaskTime').mask('99:99');
-        });
-        var hour = new Date().getHours(),
-        	minute = new Date().getMinutes();
-        if (hour < 10) hour = '0'+hour;
-        if (minute < 10) minute = '0'+minute;
-        var	vm = new Vue({
-                el:'#body',
-                data: {
-                	hour: hour,
-                	timeWakeUp: hour+':'+minute,
-                    slogan: "На пути к совершенству"
-                }, 
-                methods: {
-                	startFromSetHourInTable: function() {
-                		this.hour = this.timeWakeUp.substring(0,2);
-                	} 
-                }
-            });
-        //vm.startFromSetHourInTable();
-        function FuncAddTaskForDay() {
-        	document.querySelector('#DayTasks').innerHTML += '<li>'+document.querySelector("#textTask").value+'</li>';
-        	document.querySelector('#textTask').value = '';
-        }
-
-        function setRating(index, SomeTask) {
-        	if (index == 1)
-        		document.querySelector('#'+SomeTask).style.cssText = 'background: #B5FF9F'; //green
-        	if (index == 0)
-        		document.querySelector('#'+SomeTask).style.cssText = 'background: #FF9F9F'; //red
-        }
-        ChangeTimeInTable();
-        function ChangeTimeInTable() {
-        	var h = vm.timeWakeUp.substring(0,2),
-        		m = vm.timeWakeUp.substring(3),
-        		end = 18;
-        	if (m*1 >= 45) h = h*1+1;
-
-        	for (i=0,j=0; i<end; i++, j++) {
-	        	if (i > 24-h*1) {
-            		end = end - i;
-            		i = 0;
-            		h = 0;
-            	}
-	        	document.querySelector('#HourNumberInTable'+j).innerHTML = i+h*1;
-	        }
-        }
-        
-    </script>
+			for (i=0; i<DayTasksLi.length; i++ ) {
+				tasksForDay[i] = DayTasksLi[i].innerHTML;
+			}
+			for (i=0; i<18; i++) {
+				taskText[i] = document.querySelector('#task'+i).innerHTML;
+			}
+			
+			$.ajax({
+				url: 'recordTaskList.php'
+				, type: 'post'
+				, data: {
+					taskTextDB: taskText,
+					dateDB: new Date(2016,09,19),
+					tasksForDayDB: tasksForDay,
+					sloganDB: vm.slogan,
+					timeWakeUpDB: vm.timeWakeUp
+				}
+			}).done(function (data) {
+				alert(data);
+				if (data == "ok") {
+					alert('Данные успешно добавлены в базу');
+				} else if (data == "fail") {
+					alert('Ошибка запроса');
+				} else alert('Неизвестная ошибка');
+			});
+		});
+	</script>
 </body>
 </html>
