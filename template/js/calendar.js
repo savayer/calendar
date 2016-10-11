@@ -48,10 +48,19 @@ function showDetails(day) {
 	//alert(day.getAttribute('fullDate'));
  	menu.classList.add('slide-open-right');
 	 	
-	var height = document.documentElement.clientHeight;
+	var height = document.documentElement.clientHeight,
+		width = document.documentElement.clientWidth;
 	menu.style.height = height+'px';
-	block_calendar.style.marginLeft = '-450px';
-	block_calendar.style.transition = 'all 1s';
+	if (width >= 768) {
+		block_calendar.style.marginLeft = '-450px';
+    	block_calendar.style.transition = 'margin-left 1s';	
+    	document.querySelector('.slide').style.transition = 'all 1s';
+	} else {
+		block_calendar.style.marginLeft = '';
+    	block_calendar.style.transition = '';			
+    	document.querySelector('.slide').style.transition = '';
+	}
+
 	document.querySelector('#Date').innerHTML = day.getAttribute('fullDate');
 }
 
