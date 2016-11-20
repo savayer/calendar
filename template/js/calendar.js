@@ -26,19 +26,19 @@ function showMonth(year, monthNumber) {
 	}
 	for (i=1; i<=lastDayOfMonth; i++) {
 		if (i !== date.getDate() || monthNumber !== date.getMonth() || year !== date.getFullYear() ) {
-			if (new Date(year, monthNumber, i).getDay() == 6 || 
+			if (new Date(year, monthNumber, i).getDay() == 6 ||
 				new Date(year, monthNumber, i).getDay() == 0) {
-				calendar += '<td class="holiday dayNumber" id="thisDate'+i+'" onclick="showDetails(thisDate'+i+');" fullDate="'+new Date(year, monthNumber, i).toLocaleString('ru', options)+'">'+i+'</td>';
+				calendar += '<td class="holiday dayNumber" id="thisDate'+i+'" onclick="showDetails(thisDate'+i+');" yearNumber="'+year+'" monthNumber="'+monthNumber+'" fullDate="'+new Date(year, monthNumber, i).toLocaleString('ru', options)+'">'+i+'</td>';
 			} else {
-				calendar += '<td class="dayNumber" id="thisDate'+i+'" onclick="showDetails(thisDate'+i+');" fullDate="'+new Date(year, monthNumber, i).toLocaleString('ru', options)+'">'+i+'</td>';
+				calendar += '<td class="dayNumber" id="thisDate'+i+'" onclick="showDetails(thisDate'+i+');" yearNumber="'+year+'" monthNumber="'+monthNumber+'" fullDate="'+new Date(year, monthNumber, i).toLocaleString('ru', options)+'">'+i+'</td>';
 			}
 		} else {
-			calendar += '<td class="today dayNumber" id="thisDate'+i+'" onclick="showDetails(thisDate'+i+');" fullDate="'+new Date(year, monthNumber, i).toLocaleString('ru', options)+'">'+i+'</td>';
+			calendar += '<td class="today dayNumber" id="thisDate'+i+'" onclick="showDetails(thisDate'+i+');" yearNumber="'+year+'" monthNumber="'+monthNumber+'" fullDate="'+new Date(year, monthNumber, i).toLocaleString('ru', options)+'">'+i+'</td>';
 		}
 		if (new Date(year, monthNumber, i).getDay() == 0) {
 			calendar += '<tr>';
 		}
-	}	
+	}
 	document.querySelector('#month').innerHTML = months[monthNumber];
 	document.querySelector('#year').innerHTML = year;
 	document.querySelector('#calendar').innerHTML += calendar;
@@ -47,17 +47,17 @@ function showMonth(year, monthNumber) {
 function showDetails(day) {
 	//alert(day.getAttribute('fullDate'));
  	menu.classList.add('slide-open-right');
-	 	
+
 	var height = document.documentElement.clientHeight,
 		width = document.documentElement.clientWidth;
 	menu.style.height = height+'px';
 	if (width >= 768) {
-		block_calendar.style.marginLeft = '-450px';
-    	block_calendar.style.transition = 'margin-left 1s';	
+		block_calendar.style.marginLeft = '-500px';
+    	block_calendar.style.transition = 'margin-left 1s';
     	document.querySelector('.slide').style.transition = 'all 1s';
 	} else {
 		block_calendar.style.marginLeft = '';
-    	block_calendar.style.transition = '';			
+    	block_calendar.style.transition = '';
     	document.querySelector('.slide').style.transition = '';
 	}
 
@@ -112,11 +112,11 @@ var	vm = new Vue({
         	hour: hour,
         	timeWakeUp: hour+':'+minute,
             slogan: "На пути к совершенству"
-        }, 
+        },
         methods: {
         	startFromSetHourInTable: function() {
         		this.hour = this.timeWakeUp.substring(0,2);
-        	} 
+        	}
         }
     });
 //vm.startFromSetHourInTable();

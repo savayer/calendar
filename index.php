@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="template/bootstrap/css/bootstrap.css">
 <!-- 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/
 bootstrap.min.css"> -->
-	<link rel="stylesheet" href="template/css/styles.css">	
+	<link rel="stylesheet" href="template/css/styles.css">
 	<title>Document</title>
 </head>
 <body id="body">
@@ -54,14 +54,8 @@ bootstrap.min.css"> -->
 				</div>
 			</div>
 		</div>
-	</div>	
+	</div>
 	<!-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
-	<?php 
-		require_once('DB.php'); 
-		$obj = new DB;
-		$obj->doQuery('SELECT * FROM SelectedDay, Rating, TasksList, TasksForDay, DayResult WHERE (selectedday.id_day = taskslist.id_day) AND () ');
-			
-	?>
 	<div id="menu" class="slide">
 		<div class="row">
 			<span id="closeMenu" class="col-md-1 col-xs-1"><i class="glyphicon glyphicon-remove-sign"></i></span>
@@ -71,12 +65,12 @@ bootstrap.min.css"> -->
 
 		<div class="row">
 			<div class="col-md-3 col-xs-3 col-md-offset-1">
-				<div class="timeWakeUpClass" data-toggle="modal" data-target="#modalTime" v-text="timeWakeUp"></div>
+				<div id="timeWakeUpDB" class="timeWakeUpClass" data-toggle="modal" data-target="#modalTime" v-text="timeWakeUp"></div>
 			</div>
-			
+
 			<div class="col-md-1 col-xs-1"></div>
 			<div class="col-md-8 col-xs-8">
-				<em v-text="slogan" data-toggle="modal" data-target="#modalSlogan"></em>
+				<em id="sloganDB" v-text="slogan" data-toggle="modal" data-target="#modalSlogan"></em>
 			</div>
 		</div>
 
@@ -92,7 +86,7 @@ bootstrap.min.css"> -->
 		</div>
 		<form class="col-md-offset-10 col-xs-offset-9">
 			<input type="button" value="Сохранить" id="saveToDB" class="btn btn-danger">
-		</form><br>		
+		</form><br>
  		<div class="table-responsive">
 	 		<table id="TaskList" class="table table-striped table-bordered table-condensed">
 	 			<tbody v-for="(i,j) in 18"> <!-- на сон 6 часов-->
@@ -146,7 +140,7 @@ bootstrap.min.css"> -->
 	    </table>
  	</div>
  	<script src="template/js/vue.min.js"></script>
-	<script src="template/js/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
 	<script src="template/bootstrap/js/bootstrap.min.js"></script>
 	<script src="template/js/jquery.maskedinput.min.js"></script>
 	<script src="template/js/calendar.js"></script>
@@ -157,31 +151,107 @@ bootstrap.min.css"> -->
 				DayTasksLi = document.querySelectorAll('#DayTasks li');
 
 			for (i=0; i<DayTasksLi.length; i++ ) {
-				tasksForDay[i] = DayTasksLi[i].innerHTML;
+				if (DayTasksLi[i].innerHTML != '')
+					tasksForDay[i] = DayTasksLi[i].innerHTML;
 			}
+			var j=0;
 			for (i=0; i<18; i++) {
-				taskText[i] = document.querySelector('#task'+i).innerHTML;
+				if (document.querySelector('#task'+i).innerHTML != '')
+					taskText[i] = document.querySelector('#task'+i).innerHTML;
+					if (typeof(taskText[i]) != 'undefined')	j++;
 			}
-			
+			// alert(dateChosen);
+			// alert(timeWakeUpDB.innerHTML);
+			// alert(sloganDB.innerHTML);
 			$.ajax({
-				url: 'recordTaskList.php'
+				url: 'insert.php'
 				, type: 'post'
 				, data: {
-					taskTextDB: taskText,
-					dateDB: new Date(2016,09,19),
-					tasksForDayDB: tasksForDay,
-					sloganDB: vm.slogan,
-					timeWakeUpDB: vm.timeWakeUp
+					id_day: dateChosen,
+					arrayTaskDone: taskText,
+					countTask: DayTasksLi.length,
+					countTaskDone: j,
+					tasks: tasksForDay,
+					timeWakeUp: timeWakeUpDB.innerHTML,
+					slogan: sloganDB.innerHTML
 				}
 			}).done(function (data) {
-				alert(data);
+				//alert(data);
 				if (data == "ok") {
-					alert('Данные успешно добавлены в базу');
+					alert('Done');
 				} else if (data == "fail") {
-					alert('Ошибка запроса');
-				} else alert('Неизвестная ошибка');
+					alert('Bad request');
+				} else alert('undefined error');
 			});
 		});
+
+		full_calendar.onclick = function(event) {
+		  var target = event.target;
+
+		  while (target != full_calendar) {
+		    if (target.tagName == 'TD') {
+		    	var numMonth = (target.getAttribute('monthnumber'))*1+1;
+					var numYear = (target.getAttribute('yearnumber'));
+					numYear = numYear.substr(2,2);
+					if (numMonth < 10) {
+						numMonth = '0'+numMonth;
+					}
+		    	dateChosen = target.innerHTML+numMonth+numYear;
+					//alert(dateChosen);
+		      $.ajax({
+		      	url: 'getData.php',
+		      	type: 'post',
+		      	data: {
+		      		dateChosen: dateChosen
+		      	}
+		      }).done(function(response) {
+		      	//console.log(response);
+		      	if (response != 'fail') {
+		      		DayTasks.innerHTML = '';
+		      		sloganDB.innerHTML = '';
+		      		timeWakeUpDB.innerHTML = '';
+							var taskj = 0;
+							for (i=0;i<18;i++) {
+								TaskList.querySelector('td[id="task'+i+'"]').innerHTML = '';
+							}
+		      		//console.log(JSON.parse(response));
+		      		response = JSON.parse(response);
+							vm.timeWakeUp = response[0]['timeWakeUp'];
+							ChangeTimeInTable();
+
+							sloganDB.innerHTML = response[0]['slogan'];
+							timeWakeUpDB.innerHTML = response[0]['timeWakeUp'];
+
+		      		for (i=0; i<response.length; i++) {
+								if (typeof(response[i]['text_task']) != 'undefined') {
+									var newLi = document.createElement('li');
+			      			newLi.innerHTML = response[i]['text_task'];
+			      			DayTasks.appendChild(newLi);
+								}
+								if (typeof(response[i]['text_taskDone']) != 'undefined') {
+									TaskList.querySelector('td[id="task'+taskj+'"]').innerHTML = response[i]['text_taskDone'];
+									taskj++;
+								}
+								//console.log(response[i]['text_taskDone']);
+		      		}
+		      		/*, function (key, value) {
+		      			// if (key == 'tasklist') {
+	      				var newLi = document.createElement('li');
+			      		newLi.innerHTML = value;
+			      		DayTasks.appendChild(newLi);
+			      	//}
+			      	response.forEach(function(value, i, response) {
+			      		var newLi = document.createElement('li');
+			      		newLi.innerHTML = value;
+			      		DayTasks.appendChild(newLi);
+			      	});*/
+		      	}
+		      })
+		      return;
+		    }
+		    target = target.parentNode;
+		  }
+		}
 	</script>
 </body>
 </html>
