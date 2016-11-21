@@ -1,2 +1,2 @@
 # Calendar
-<img src="screen,jpg" alt="img">
+<img src="screen.jpg" alt="img">
