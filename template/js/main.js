@@ -11,10 +11,16 @@ $('#saveToDB').on('click', function () {
 	for (i=0; i<36; i++) {
 		if (document.querySelector('#task'+i).innerHTML != '')
 			taskText[i] = document.querySelector('#task'+i).innerHTML;
-			timeDone[i] = timeNow;
-			timeNow = (timeNow*1)+0.5;
+			if (timeNow.match(/0[0-9]/g)) timeNow = timeNow.substr(1,1);
 			//alert(timeNow);
-			if (typeof(taskText[i]) != 'undefined')	j++;//j - количество записей в таблице дел 
+			//return;
+			timeDone[i] = timeNow;
+			timeNow = (timeNow*1)+0.5+'';
+			if (timeNow == 24) {
+				timeNow = '0';
+			}
+			//alert(timeNow);
+			if (typeof(taskText[i]) != 'undefined')	j++;//j - количество записей в таблице дел
 
 	}
 	// alert(dateChosen);
@@ -35,11 +41,11 @@ $('#saveToDB').on('click', function () {
 		}
 	}).done(function (data) {
 		alert(data);
-		if (data == "ok") {
-			alert('Done');
-		} else if (data == "fail") {
-			alert('Bad request');
-		} else alert('undefined error');
+		// if (data == "ok") {
+		// 	alert('Done');
+		// } else if (data == "fail") {
+		// 	alert('Bad request');
+		// } else alert('undefined error');
 	});
 	});
 //////////////////////////////////////////////////////////////////////////////////////
